@@ -7,14 +7,11 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- *
- */
 class LoaderTest {
     @Test
     @DisplayName("Throws exception when URL string is null.")
     void nullUrl() {
-        NullPointerException expectedException = assertThrows(
+        var expectedException = assertThrows(
                 NullPointerException.class,
                 () -> new Loader(null));
         assertThat(
@@ -25,7 +22,7 @@ class LoaderTest {
     @Test
     @DisplayName("Throws exception when URL string is empty.")
     void emptyUrl() {
-        IllegalArgumentException expectedException = assertThrows(
+        var expectedException = assertThrows(
                 IllegalArgumentException.class,
                 () -> new Loader(""));
         assertThat(
@@ -36,7 +33,7 @@ class LoaderTest {
     @Test
     @DisplayName("Throws exception when given protocol is not supported.")
     void unsupportedProtocol() {
-        IllegalArgumentException expectedException = assertThrows(
+        var expectedException = assertThrows(
                 IllegalArgumentException.class,
                 () -> new Loader("ftp://someftp.com"));
         assertThat(
@@ -46,6 +43,15 @@ class LoaderTest {
                                 "supported protocols are [FILE, HTTP]."));
     }
 
-
+    @Test
+    @DisplayName("Throws exception when URL string is malformed.")
+    void malformedUrl() {
+        var expectedException = assertThrows(
+                IllegalArgumentException.class,
+                () -> new Loader("invalid"));
+        assertThat(
+                expectedException.getMessage(),
+                equalTo("URL string [invalid] is malformed."));
+    }
 }
 
