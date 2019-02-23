@@ -29,9 +29,25 @@ import static picocli.CommandLine.Parameters;
         name = "rgs",
         description = "Rgs - the stupid image processing tool." +
                 "\n" +
-                "The tool resizes given image according to desired dimensions and converts it to grayscale. Obviously, the tool" +
+                "The tool resizes given image according to desired dimensions and converts it to grayscale. The tool" +
                 "doesn't keep aspect ratio. So if you would like to SCALE an image please calculate appropriate dimensions" +
-                "in advance and pass them to the tool explicitly. ",
+                "in advance and pass them to the tool explicitly. " +
+                "\n" +
+                "Resultant image will be saved into current directory with hard-coded name `a.out'. " +
+                "Absolute path to output file will be printed (please see `--verbose' switch for more details)." +
+                " It's quite ugly behaviour" +
+                "Because typical user would like to keep the same extension as for input image (however, in Unix-like operating" +
+                "systems file extension doesn't matter). Perhaps, this will be improved in future release of the application " +
+                "(with a bunch of optional switches for fine-grained tuning of output file name)." +
+                "\n" +
+                "For example, you would like to grab Google logo from the Web, downscale it in ten times and save to our computer." +
+                "Just invoke the tool as following: " +
+                "\n" +
+                "rgs https://www.google.by/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png 27 9\n" +
+                "\n" +
+                "\n" +
+                "Currently only JPEG and PNG formats are supported." +
+                "",
         mixinStandardHelpOptions = true,
         version = "1.0")
 public class ResizeGrayscaleSave implements Runnable {
@@ -42,7 +58,10 @@ public class ResizeGrayscaleSave implements Runnable {
                     "example, inside a shell-script) you probably don't need to use this option. " +
                     "Multiple `-v' options increase the verbosity. " +
                     "\n" +
-                    "This switch is optional. Default mode is \"off\".")
+                    "By default only path to output image is printed." +
+                    "" +
+                    "\n" +
+                    "This switch is optional.")
     private boolean[] verbose = new boolean[0];
 
     @Parameters(
@@ -52,16 +71,39 @@ public class ResizeGrayscaleSave implements Runnable {
                     "Currently two protocols are supported: local files (e.g. `file://path/to/image') and HTTP (e.g. " +
                     "`http://mysite.com/image')." +
                     "\n" +
+                    "The application doesn't limit length of an URL (obviously, the only limitation is the " +
+                    "amount of available memory). But your shell may have its own restriction on command line length." +
+                    "The same situation is for HTTP protocol, certain file system, etc."
+                    +
+                    "\n" +
                     "This parameter is mandatory.")
     private String url;
 
     @Parameters(
-            arity="1",
+            arity = "1",
             paramLabel = "WIDTH",
-            description = "Width of the output image"
+            description = "Width of the output image in pixels. Should be greater than zero. Maximum value of this parameter is limited to " +
+                    "4096. Well, it's quite nasty limitation. But processing of large images requires enormous amount of memory which " +
+                    "depends of user's computer configuration. Such a configuration is not predictable. So in case of vast dimensions " +
+                    "it will be better to " +
+                    "stop resizing in the very beginning rather that let the application fail suddenly right in the middle." +
+                    "\n" +
+                    "" +
+                    "" +
+                    "" +
+                    "This parameter is mandatory."
     )
     private int width;
 
+    @Parameters(
+            arity = "1",
+            paramLabel = "HEIGHT",
+            description = "Similar to WIDTH parameter. Please note, that HEIGHT is not tied to WIDTH. You can specify them " +
+                    "independently. This makes harder to keep aspect ratio. Probably, this will be fixed in future release of the tool. " +
+                    "" +
+                    "\n" +
+                    "This parameter is mandatory."
+    )
     private int height;
 
     public void run() {
