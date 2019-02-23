@@ -1,6 +1,5 @@
 package com.github.flaz14;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -120,19 +119,17 @@ class LoaderTest {
         }
 
         @Test
-        @DisplayName("Throws exception when given image format is not supported.")
-        @Disabled
-        void unsupportedFormat() {
+        @DisplayName("Throws exception when given image is malformed.")
+        void malformedImage() {
             var expectedException = assertThrows(
                     IllegalStateException.class,
-                    () -> new Loader(testImage("unsupported.tif")).
+                    () -> new Loader(testImage("malformed.tif")).
                             load());
             assertThat(
                     expectedException.getMessage(),
                     allOf(
-                            containsString("The image at URL"),
-                            containsString("is [5000] pixels high"),
-                            containsString("maximum allowed height of an image is equal to [4096] pixels.")));
+                            containsString("There is no image at URL"),
+                            containsString("perhaps, the URL points to the file of other type or to directory")));
         }
     }
 

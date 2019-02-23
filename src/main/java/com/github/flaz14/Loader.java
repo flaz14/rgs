@@ -42,12 +42,11 @@ class Loader {
             new ImageRequirement().
                     width(image).
                     height(image);
-
+            return image;
         } catch (IOException onRead) {
             var message = format("Failed to read image from URL [%s].", url);
             throw new IllegalStateException(message, onRead);
         }
-        return null;
     }
 
     private class UrlRequirement {
@@ -116,12 +115,6 @@ class Loader {
             }
             return this;
         }
-
-        ImageRequirement format(BufferedImage image) {
-            
-            return this;
-        }
-
     }
 
     private final URL url;
