@@ -33,7 +33,8 @@ import static picocli.CommandLine.Parameters;
                 "doesn't keep aspect ratio. So if you would like to SCALE an image please calculate appropriate dimensions" +
                 "in advance and pass them to the tool explicitly. " +
                 "\n" +
-                "Resultant image will be saved into current directory with hard-coded name `a.out'. " +
+                "Resultant image will be saved into current directory with hard-coded name `a.out' (like GSS compiler does for " +
+                "output executable). " +
                 "Absolute path to output file will be printed (please see `--verbose' switch for more details)." +
                 " It's quite ugly behaviour" +
                 "Because typical user would like to keep the same extension as for input image (however, in Unix-like operating" +
@@ -41,7 +42,7 @@ import static picocli.CommandLine.Parameters;
                 "(with a bunch of optional switches for fine-grained tuning of output file name)." +
                 "\n" +
                 "For example, you would like to grab Google logo from the Web, downscale it in ten times and save to our computer." +
-                "Just invoke the tool as following: " +
+                "Just invoke the tool like this: " +
                 "\n" +
                 "rgs https://www.google.by/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png 27 9\n" +
                 "\n" +
