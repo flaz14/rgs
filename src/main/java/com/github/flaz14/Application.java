@@ -24,6 +24,9 @@ import static picocli.CommandLine.Parameters;
  * тесты
  * <p>
  * описание какие форматы изображений поддерживаются.
+ *
+ *
+ * <a href="https://github.com/remkop/picocli/issues/292">Validation of parameters</a>
  */
 @Command(
         name = "rgs",
@@ -31,12 +34,16 @@ import static picocli.CommandLine.Parameters;
                 "\n" +
                 "The tool resizes given image according to desired dimensions and converts it to grayscale. The tool" +
                 "doesn't keep aspect ratio. So if you would like to SCALE an image please calculate appropriate dimensions" +
-                "in advance and pass them to the tool explicitly. " +
+                "in advance and pass them to the tool explicitly. Maximum image size is 4096x4096 pixels. Тут еще будет написано, " +
+                "что обработка гигантских изображений - отдельная задача, требующая времени, что фича будет реализована в будущих" +
+                "версиях программы, а сейчас лучше пусть приложение откажется работать сразу, нежели внезапно упадет посередине" +
+                "из-за нехватки памяти." +
                 "\n" +
                 "Resultant image will be saved into current directory with hard-coded name `a.out' (like GSS compiler does for " +
                 "output executable). " +
                 "Absolute path to output file will be printed (please see `--verbose' switch for more details)." +
                 " It's quite ugly behaviour" +
+                "Если файл с именем a.out уже существует в текущей директории, он перезаписывается безо всяких предупреждений." +
                 "Because typical user would like to keep the same extension as for input image (however, in Unix-like operating" +
                 "systems file extension doesn't matter). Perhaps, this will be improved in future release of the application " +
                 "(with a bunch of optional switches for fine-grained tuning of output file name)." +
@@ -51,7 +58,7 @@ import static picocli.CommandLine.Parameters;
                 "",
         mixinStandardHelpOptions = true,
         version = "1.0")
-public class ResizeGrayscaleSave implements Runnable {
+public class Application implements Runnable {
     @Option(
             names = {"-v", "--verbose"},
             description = "Verbose mode. This option is helpful if you would like an interactive session or " +
@@ -111,7 +118,7 @@ public class ResizeGrayscaleSave implements Runnable {
     }
 
     public static void main(String args[]) {
-        CommandLine.run(new ResizeGrayscaleSave(), args);
+        CommandLine.run(new Application(), args);
     }
 
 
