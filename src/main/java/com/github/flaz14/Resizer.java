@@ -1,10 +1,21 @@
 package com.github.flaz14;
 
+import java.awt.image.BufferedImage;
+
+import static java.util.Objects.requireNonNull;
+
 /**
  *
  */
 public class Resizer {
-    public void r() {
+    private final BufferedImage image;
+
+    public Resizer(BufferedImage image) {
+        requireNonNull(image, "Image should not be null.");
+        this.image = image;
+    }
+
+    public void resize() {
 //        private float xScaleFactor, yScaleFactor = ...;
 //        private BufferedImage originalImage = ...;
 //        public void paintComponent (Graphics g){
