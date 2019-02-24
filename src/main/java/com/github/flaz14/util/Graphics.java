@@ -4,9 +4,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- *
+ * Wrapper for {@link Graphics2D} class with automatic resource handling.
+ * <p>
+ * While this class does some useful job, the main purpose of its implementation was resource management. Once work is
+ * done, {@link java.awt.Graphics#dispose()} should be called. We do exactly the same thing but in auto-closable manner.
+ * So our custom class can be used in try-with-resources statement as habitual JDK classes.
  */
-// TODO just for try-with-resources for dispose()
 public class Graphics implements AutoCloseable {
     public Graphics(BufferedImage target) {
         this.graphics2D = target.createGraphics();

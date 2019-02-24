@@ -1,7 +1,7 @@
 package com.github.flaz14.io;
 
 import com.github.flaz14.Image;
-import com.github.flaz14.Limitations;
+import com.github.flaz14.Limits;
 import com.github.flaz14.util.FileName;
 
 import javax.imageio.ImageIO;
@@ -22,7 +22,11 @@ import static java.util.Objects.requireNonNull;
 import static java.util.Set.of;
 
 /**
+ * Loads image from network or disk into memory.
+ * <p>
+ * Currently only HTTP and locally mounted filesystem sources are supported.
  *
+ * @see Image
  */
 public class Loader {
     public Loader(String urlString) {
@@ -38,6 +42,15 @@ public class Loader {
         }
     }
 
+    /**
+     * Reads image from an URL and preserves information about image format and file name. So the image can be processed
+     * and saved in the same form as the original.
+     * <p>
+     * File name is considered as "base name". E.g. a name without path but with extension.
+     *
+     * @return a "fresh" instance of an image. Caching for multiple loading of the same picture is not implemented
+     * currently.
+     */
     public Image load() {
         try (InputStream urlStream = url.openStream();
              ImageInputStream imageStream = ImageIO.createImageInputStream(urlStream)) {
@@ -84,6 +97,10 @@ public class Loader {
         return formatName;
     }
 
+    // Contains simple validations that haven't side effects.
+    //
+    // We use non-static inner class in order to reduce amount of dull
+    // typing and make chains of validations possible.
     private class Check {
         private Check nonNull(String urlString) {
             requireNonNull(urlString, "URL string should not be null.");
@@ -116,13 +133,13 @@ public class Loader {
 
         private Check width(BufferedImage image) {
             var width = image.getWidth();
-            if (width > Limitations.IMAGE_WIDTH_IN_PIXELS) {
+            if (width > Limits.IMAGE_WIDTH_IN_PIXELS) {
                 var message = format("The image at URL [%s] " +
                                 "is [%d] pixels wide; " +
                                 "maximum allowed width of an image is equal to [%d] pixels.",
                         url,
                         width,
-                        Limitations.IMAGE_WIDTH_IN_PIXELS);
+                        Limits.IMAGE_WIDTH_IN_PIXELS);
                 throw new IllegalStateException(message);
             }
             return this;
@@ -130,30 +147,39 @@ public class Loader {
 
         private Check height(BufferedImage image) {
             var height = image.getHeight();
-            if (height > Limitations.IMAGE_HEIGHT_IN_PIXELS) {
+            if (height > Limits.IMAGE_HEIGHT_IN_PIXELS) {
                 var message = format("The image at URL [%s] " +
                                 "is [%d] pixels high; " +
                                 "maximum allowed height of an image is equal to [%d] pixels.",
                         url,
                         height,
-                        Limitations.IMAGE_WIDTH_IN_PIXELS);
+                        Limits.IMAGE_WIDTH_IN_PIXELS);
                 throw new IllegalStateException(message);
             }
             return this;
         }
     }
 
-
-    // TODO we use set because many other protocols can be supported in future,
-    // TODO also, it simplifies composition of readable and informative exception messages
-    // TODO we wrap it with tree set in order to keep the order of comparison consistent.
+    // According to interview task specification, we support a few of URL
+    // protocols. We can add more protocols into this map in the future
+    // without modification the rest of this class.
+    //
+    // We keep content in `TreeMap' for the sake of predictable order of
+    // validation. And we wrap the map by its unmodifiable twin just
+    // for preventing of accidental modification.
     private static final Set<String> SUPPORTED_PROTOCOLS =
             unmodifiableSet(
                     new TreeSet<>(of("FILE", "HTTP")));
 
-    // TODO we use set because many other protocols can be supported in future,
-    // TODO also, it simplifies composition of readable and informative exception messages
-    // TODO we wrap it with tree set in order to keep the order of comparison consistent.
+    // Currently we support a few image formats.
+    //
+    // In general, handling each format should be done with great care.
+    // For example, BMP can support transparency or not depending on
+    // compression method (32-bit BITFIELDS vs. 24-bit RGB respectively).
+    // GIF is even more intricate (due to animation).
+    //
+    // The explanations about extensibility and robustness from the above
+    // map are relevant for this map as well.
     private static final Set<String> SUPPORTED_FORMATS =
             unmodifiableSet(
                     new TreeSet<>(of("JPEG", "PNG")));

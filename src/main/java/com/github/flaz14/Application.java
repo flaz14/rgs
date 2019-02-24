@@ -79,7 +79,6 @@ public class Application implements Runnable {
     @Parameters(
             paramLabel = "URL",
             index = "0",
-            arity = "1",
             description = "URL to image to be processed. The should include protocol name. " +
                     "Currently two protocols are supported: local files (e.g. `file://path/to/image') and HTTP (e.g. " +
                     "`http://mysite.com/image')." +
@@ -95,7 +94,6 @@ public class Application implements Runnable {
     @Parameters(
             paramLabel = "WIDTH",
             index = "1",
-            arity = "1",
             description = "Width of the output image in pixels. Should be greater than zero. Maximum value of this parameter is limited to " +
                     "4096. Well, it's quite nasty limitation. But processing of large images requires enormous amount of memory which " +
                     "depends of user's computer configuration. Such a configuration is not predictable. So in case of vast dimensions " +
@@ -112,7 +110,6 @@ public class Application implements Runnable {
     @Parameters(
             paramLabel = "HEIGHT",
             index = "2",
-            arity = "1",
             description = "Similar to WIDTH parameter. Please note, that HEIGHT is not tied to WIDTH. You can specify them " +
                     "independently. This makes harder to keep aspect ratio. Probably, this will be fixed in future release of the tool. " +
                     "" +

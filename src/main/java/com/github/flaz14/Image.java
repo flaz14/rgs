@@ -3,7 +3,7 @@ package com.github.flaz14;
 import java.awt.image.BufferedImage;
 
 /**
- *
+ * Handy wrapper that helps to keep original image format and file name.
  */
 public class Image {
     public Image(BufferedImage buffer, String formatName, String fileName) {
@@ -24,6 +24,11 @@ public class Image {
         return fileName;
     }
 
+    /**
+     * Image buffer is not included into representation.
+     * <p>
+     * Tons of bytes from a buffer are unreadable (but they still can be examined with aid of debugger).
+     */
     @Override
     public String toString() {
         return "Image{" +
