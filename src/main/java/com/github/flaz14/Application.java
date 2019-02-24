@@ -51,7 +51,7 @@ import static picocli.CommandLine.Parameters;
                 "For example, you would like to grab Google logo from the Web, downscale it in ten times and save to our computer." +
                 "Just invoke the tool like this: " +
                 "\n" +
-                "rgs https://www.google.by/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png 27 9\n" +
+                "rgs http://www.google.by/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png 100 100\n" +
                 "\n" +
                 "\n" +
                 "Currently only JPEG and PNG formats are supported." +
@@ -75,7 +75,7 @@ public class Application implements Runnable {
     @Parameters(
             paramLabel = "URL",
             index = "0",
-//            arity = "1",
+            arity = "1",
             description = "URL to image to be processed. The should include protocol name. " +
                     "Currently two protocols are supported: local files (e.g. `file://path/to/image') and HTTP (e.g. " +
                     "`http://mysite.com/image')." +
@@ -91,7 +91,7 @@ public class Application implements Runnable {
     @Parameters(
             paramLabel = "WIDTH",
             index = "1",
-//            arity = "1",
+            arity = "1",
             description = "Width of the output image in pixels. Should be greater than zero. Maximum value of this parameter is limited to " +
                     "4096. Well, it's quite nasty limitation. But processing of large images requires enormous amount of memory which " +
                     "depends of user's computer configuration. Such a configuration is not predictable. So in case of vast dimensions " +
