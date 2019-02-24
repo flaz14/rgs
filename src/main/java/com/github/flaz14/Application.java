@@ -122,8 +122,8 @@ public class Application implements Runnable {
 
     public void run() {
         Image originalImage = new Loader(url).load();
-        Image resizedImage = new Resizer(originalImage).resize(width, height);
-        Image grayscaledImage = new Grayscaler(resizedImage).grayscale();
+        Image resizedImage = new Resizer(originalImage, width, height).process();
+        Image grayscaledImage = new Grayscaler(resizedImage).process();
         new Writer(grayscaledImage).write();
     }
 

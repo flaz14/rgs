@@ -10,6 +10,12 @@ import static java.util.Objects.requireNonNull;
  * // TODO write about pure functions
  */
 public class FileName {
+    private FileName() {
+        throw new UnsupportedOperationException("This a bunch of pure functions." +
+                "Please, don't instantiate this class via reflection. " +
+                "But use its static methods.");
+    }
+
     public static String fromUrl(URL url) {
         requireNonNull(url, "URL should not be null.");
         var path = url.getPath();

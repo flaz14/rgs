@@ -9,9 +9,12 @@ import java.awt.image.BufferedImage;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-class ResizerTest {
+/**
+ *
+ */
+class GrayscalerTest {
     @Test
-    @DisplayName("Resizes image according to desired width and height but keeps image format and file name unchanged.")
+    @DisplayName("Grayscales image but keeps width, height, image format and file name unchanged.")
     void happyPath() {
         int targetWidth = 8;
         int targetHeight = 3;
