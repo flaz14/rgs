@@ -38,8 +38,7 @@ class Loader {
             ImageInputStream imageStream = ImageIO.createImageInputStream(url.openStream());
             Iterator<ImageReader> readers = new ImageRequirement().atLeastOneImage(imageStream);
             ImageReader reader = readers.next();
-            String formatName = reader.getFormatName();
-            new ImageRequirement().format(formatName);
+            String formatName = new ImageRequirement().format(reader);
             reader.setInput(imageStream);
             BufferedImage buffer = reader.read(0);
             new ImageRequirement().
@@ -131,7 +130,10 @@ class Loader {
             return this;
         }
 
-        public ImageRequirement format(String formatName) {
+        public String format(ImageReader reader) throws IOException {
+            String formatName = reader.
+                    getFormatName().
+                    toUpperCase();
             if (!SUPPORTED_FORMATS.contains(formatName)) {
                 var message = String.format("Format [%s] " +
                                 "of the image downloaded from URL [%s] " +
@@ -142,7 +144,7 @@ class Loader {
                         SUPPORTED_FORMATS);
                 throw new IllegalArgumentException(message);
             }
-            return this;
+            return formatName;
 
         }
 

@@ -6,22 +6,27 @@ import java.awt.image.BufferedImage;
 import static java.util.Objects.requireNonNull;
 
 /**
- *
+ * // TODO implement cache but not right now
  */
 public class Resizer {
-    private final BufferedImage image;
+    private final Image image;
 
-    public Resizer(BufferedImage image) {
+    public Resizer(Image image) {
         requireNonNull(image, "Image buffer should not be null.");
         this.image = image;
     }
 
-    public BufferedImage resize(int width, int height) {
-        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics = resizedImage.createGraphics();
+    public Image resize(int width, int height) {
+        BufferedImage oldBuffer = image.buffer();
+
+        BufferedImage newBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = newBuffer.createGraphics();
         graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        graphics.drawImage(image, 0, 0, width, height, null);
-        return resizedImage;
+        graphics.drawImage(oldBuffer, 0, 0, width, height, null);
+        return new Image(
+                newBuffer,
+                image.formatName(),
+                image.fileName());
 //        private float xScaleFactor, yScaleFactor = ...;
 //        private BufferedImage originalImage = ...;
 //        public void paintComponent (Graphics g){

@@ -24,6 +24,14 @@ public class Image {
         return fileName;
     }
 
+    @Override
+    public String toString() {
+        return "Image{" +
+                "formatName='" + formatName + '\'' +
+                ", fileName='" + fileName + '\'' +
+                '}';
+    }
+
     private final BufferedImage buffer;
     private final String formatName;
     private final String fileName;
