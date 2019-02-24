@@ -5,15 +5,16 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableSet;
+import static java.util.Objects.requireNonNull;
 import static java.util.Set.of;
 
 /**
@@ -21,27 +22,26 @@ import static java.util.Set.of;
  */
 class Loader {
     Loader(String urlString) {
-        new UrlRequirement().
+        new Check().
                 nonNull(urlString).
                 nonEmpty(urlString);
         try {
             url = new URL(urlString);
+            new Check().protocol();
         } catch (MalformedURLException onParsing) {
             var message = format("URL string [%s] is malformed.", urlString);
             throw new IllegalArgumentException(message, onParsing);
         }
-        new UrlRequirement().protocol();
     }
 
     Image load() {
-        try {
-            ImageInputStream imageStream = ImageIO.createImageInputStream(url.openStream());
-            Iterator<ImageReader> readers = new ImageRequirement().atLeastOneImage(imageStream);
-            ImageReader reader = readers.next();
-            String formatName = new ImageRequirement().format(reader);
+        try (InputStream urlStream = url.openStream();
+             ImageInputStream imageStream = ImageIO.createImageInputStream(urlStream)) {
+            ImageReader reader = getFirstImage(imageStream);
             reader.setInput(imageStream);
+            String formatName = getFormatName(reader);
             BufferedImage buffer = reader.read(0);
-            new ImageRequirement().
+            new Check().
                     width(buffer).
                     height(buffer);
             String fileName = FileNameUtil.fileNameFromUrl(url);
@@ -52,20 +52,63 @@ class Loader {
         }
     }
 
-    private class UrlRequirement {
-        UrlRequirement nonNull(String urlString) {
-            Objects.requireNonNull(urlString, "URL string should not be null.");
+    private ImageReader getFirstImage(ImageInputStream imageStream) {
+        Iterator<ImageReader> readers = ImageIO.getImageReaders(imageStream);
+        if (!readers.hasNext()) {
+            var message = format("There is no image at URL [%s]; " +
+                            "perhaps, the URL points to the file of other type or to directory.",
+                    url);
+            throw new IllegalStateException(message);
+        }
+        return readers.next();
+    }
+
+    private String getFormatName(ImageReader reader) throws IOException {
+        String formatName = reader.
+                getFormatName().
+                toUpperCase();
+        if (!SUPPORTED_FORMATS.contains(formatName)) {
+            var message = format("Format [%s] " +
+                            "of the image downloaded from URL [%s] " +
+                            "is not supported; " +
+                            "supported formats are %s.",
+                    formatName,
+                    url,
+                    SUPPORTED_FORMATS);
+            throw new IllegalArgumentException(message);
+        }
+        return formatName;
+    }
+
+    // Simple validations that doesn't produce any new data
+    // Gathered into inner class in order to avoid excessive repetive names like checkXXX
+    // Also reduces amount of typing thankfully to call chains, for example, not
+    //
+    // new Check().width(image);
+    // new Check().height(image);
+    //
+    // but:
+    // new Check().
+    //        width(image).
+    //        height(image);
+    //
+    //
+    //
+    //
+    private class Check {
+        private Check nonNull(String urlString) {
+            requireNonNull(urlString, "URL string should not be null.");
             return this;
         }
 
-        UrlRequirement nonEmpty(String urlString) {
+        private Check nonEmpty(String urlString) {
             if (urlString.isEmpty()) {
                 throw new IllegalArgumentException("URL string should not be empty.");
             }
             return this;
         }
 
-        UrlRequirement protocol() {
+        private Check protocol() {
             var protocol = url.
                     getProtocol().
                     toUpperCase();
@@ -82,30 +125,10 @@ class Loader {
             return this;
         }
 
-        // TODO we use set because many other protocols can be supported in future,
-        // TODO also, it simplifies composition of readable and informative exception messages
-        // TODO we wrap it with tree set in order to keep the order of comparison consistent.
-        private final Set<String> SUPPORTED_PROTOCOLS =
-                unmodifiableSet(
-                        new TreeSet<>(of("FILE", "HTTP")));
-    }
-
-    private class ImageRequirement {
-        Iterator<ImageReader> atLeastOneImage(ImageInputStream imageStream) {
-            Iterator<ImageReader> readers = ImageIO.getImageReaders(imageStream);
-            if (!readers.hasNext()) {
-                var message = String.format("There is no image at URL [%s]; " +
-                                "perhaps, the URL points to the file of other type or to directory.",
-                        url);
-                throw new IllegalStateException(message);
-            }
-            return readers;
-        }
-
-        ImageRequirement width(BufferedImage image) {
+        private Check width(BufferedImage image) {
             var width = image.getWidth();
             if (width > Limitations.IMAGE_WIDTH_IN_PIXELS) {
-                var message = String.format("The image at URL [%s] " +
+                var message = format("The image at URL [%s] " +
                                 "is [%d] pixels wide; " +
                                 "maximum allowed width of an image is equal to [%d] pixels.",
                         url,
@@ -116,10 +139,10 @@ class Loader {
             return this;
         }
 
-        ImageRequirement height(BufferedImage image) {
+        private Check height(BufferedImage image) {
             var height = image.getHeight();
             if (height > Limitations.IMAGE_HEIGHT_IN_PIXELS) {
-                var message = String.format("The image at URL [%s] " +
+                var message = format("The image at URL [%s] " +
                                 "is [%d] pixels high; " +
                                 "maximum allowed height of an image is equal to [%d] pixels.",
                         url,
@@ -129,32 +152,22 @@ class Loader {
             }
             return this;
         }
-
-        public String format(ImageReader reader) throws IOException {
-            String formatName = reader.
-                    getFormatName().
-                    toUpperCase();
-            if (!SUPPORTED_FORMATS.contains(formatName)) {
-                var message = String.format("Format [%s] " +
-                                "of the image downloaded from URL [%s] " +
-                                "is not supported; " +
-                                "supported formats are %s.",
-                        formatName,
-                        url,
-                        SUPPORTED_FORMATS);
-                throw new IllegalArgumentException(message);
-            }
-            return formatName;
-
-        }
-
-        // TODO we use set because many other protocols can be supported in future,
-        // TODO also, it simplifies composition of readable and informative exception messages
-        // TODO we wrap it with tree set in order to keep the order of comparison consistent.
-        private final Set<String> SUPPORTED_FORMATS =
-                unmodifiableSet(
-                        new TreeSet<>(of("JPEG", "PNG")));
     }
+
+
+    // TODO we use set because many other protocols can be supported in future,
+    // TODO also, it simplifies composition of readable and informative exception messages
+    // TODO we wrap it with tree set in order to keep the order of comparison consistent.
+    private static final Set<String> SUPPORTED_PROTOCOLS =
+            unmodifiableSet(
+                    new TreeSet<>(of("FILE", "HTTP")));
+
+    // TODO we use set because many other protocols can be supported in future,
+    // TODO also, it simplifies composition of readable and informative exception messages
+    // TODO we wrap it with tree set in order to keep the order of comparison consistent.
+    private static final Set<String> SUPPORTED_FORMATS =
+            unmodifiableSet(
+                    new TreeSet<>(of("JPEG", "PNG")));
 
     private final URL url;
 }

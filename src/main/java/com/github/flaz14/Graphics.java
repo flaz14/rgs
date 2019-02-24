@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 /**
  *
  */
-// TODO just for try-with-resources
+// TODO just for try-with-resources for dispose()
 public class Graphics implements AutoCloseable {
     public Graphics(BufferedImage target) {
         this.graphics2D = target.createGraphics();
