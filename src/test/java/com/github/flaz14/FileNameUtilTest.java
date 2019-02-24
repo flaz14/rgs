@@ -9,7 +9,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.net.URL;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -61,4 +63,39 @@ class FileNameUtilTest {
         }
     }
 
+    @Nested
+    class OsTolerantFileName {
+        @Test
+        @DisplayName("Throw exception with input file name is null.")
+        void nullFileName() {
+            var exception = assertThrows(
+                    NullPointerException.class,
+                    () -> FileNameUtil.osTolerantFileName(null));
+            assertThat(
+                    exception.getMessage(),
+                    equalTo("Input file name should not be null."));
+        }
+
+
+        @ParameterizedTest(name = "Replace forbidden characters test case #{index}: inputFileName=[{0}], expectedOutputFileName=[{1}].")
+        @CsvSource({
+                "Linux rocks \\ Windows s:cks!, Linux rocks _ Windows s_cks!",
+                "logo.png?, logo.png_",
+        })
+        void happyPath(String inputFileName, String expectedOutputFileName) {
+            assertThat(
+                    FileNameUtil.osTolerantFileName(inputFileName),
+                    equalTo(expectedOutputFileName));
+        }
+
+        @Test
+        @DisplayName("Does not affect empty input file name.")
+        void emptyFileName() {
+            var inputFileName = "";
+            var outputFileName = FileNameUtil.osTolerantFileName(inputFileName);
+            assertThat(
+                    outputFileName,
+                    is(sameInstance(inputFileName)));
+        }
+    }
 }
