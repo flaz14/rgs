@@ -1,5 +1,6 @@
 package com.github.flaz14;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static java.util.Objects.requireNonNull;
@@ -11,11 +12,16 @@ public class Resizer {
     private final BufferedImage image;
 
     public Resizer(BufferedImage image) {
-        requireNonNull(image, "Image should not be null.");
+        requireNonNull(image, "Image buffer should not be null.");
         this.image = image;
     }
 
-    public void resize() {
+    public BufferedImage resize(int width, int height) {
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = resizedImage.createGraphics();
+        graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        graphics.drawImage(image, 0, 0, width, height, null);
+        return resizedImage;
 //        private float xScaleFactor, yScaleFactor = ...;
 //        private BufferedImage originalImage = ...;
 //        public void paintComponent (Graphics g){

@@ -19,6 +19,6 @@ class ResizerTest {
                 () -> new Resizer(null));
         assertThat(
                 expectedException.getMessage(),
-                equalTo("Image should not be null."));
+                equalTo("Image buffer should not be null."));
     }
 }

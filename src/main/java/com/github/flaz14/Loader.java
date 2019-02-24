@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
@@ -30,7 +31,7 @@ class Loader {
         new UrlRequirement().protocol();
     }
 
-    BufferedImage load() {
+    Image load() {
         try {
             BufferedImage image = ImageIO.read(url);
             if (image == null) {
@@ -42,7 +43,7 @@ class Loader {
             new ImageRequirement().
                     width(image).
                     height(image);
-            return image;
+            return null;
         } catch (IOException onRead) {
             var message = format("Failed to read image from URL [%s].", url);
             throw new IllegalStateException(message, onRead);

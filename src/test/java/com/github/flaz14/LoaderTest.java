@@ -3,6 +3,10 @@ package com.github.flaz14;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+import java.net.URL;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -93,7 +97,7 @@ class LoaderTest {
         void tooWideImage() {
             var expectedException = assertThrows(
                     IllegalStateException.class,
-                    () -> new Loader(testImage("too_wide.jpg")).
+                    () -> new Loader(sampleImage("too_wide.jpg")).
                             load());
             assertThat(
                     expectedException.getMessage(),
@@ -108,7 +112,7 @@ class LoaderTest {
         void tooHighImage() {
             var expectedException = assertThrows(
                     IllegalStateException.class,
-                    () -> new Loader(testImage("too_high.jpg")).
+                    () -> new Loader(sampleImage("too_high.jpg")).
                             load());
             assertThat(
                     expectedException.getMessage(),
@@ -123,7 +127,7 @@ class LoaderTest {
         void malformedImage() {
             var expectedException = assertThrows(
                     IllegalStateException.class,
-                    () -> new Loader(testImage("malformed.tif")).
+                    () -> new Loader(sampleImage("malformed.tif")).
                             load());
             assertThat(
                     expectedException.getMessage(),
@@ -131,9 +135,16 @@ class LoaderTest {
                             containsString("There is no image at URL"),
                             containsString("perhaps, the URL points to the file of other type or to directory")));
         }
+
+        @Test
+        @DisplayName("Loads image and preserves original format, file name and extension.")
+        void happyPath() {
+            new Loader(sampleImage("1024x280.jpg")).
+                    load();
+        }
     }
 
-    private static String testImage(String fileName) {
+    private static String sampleImage(String fileName) {
         return ClassLoader.
                 getSystemResource(fileName).
                 toString();
