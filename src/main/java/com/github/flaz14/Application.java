@@ -1,5 +1,9 @@
 package com.github.flaz14;
 
+import com.github.flaz14.io.Loader;
+import com.github.flaz14.io.Writer;
+import com.github.flaz14.processor.Grayscaler;
+import com.github.flaz14.processor.Resizer;
 import picocli.CommandLine;
 
 import static picocli.CommandLine.Command;

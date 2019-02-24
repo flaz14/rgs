@@ -1,4 +1,4 @@
-package com.github.flaz14;
+package com.github.flaz14.util;
 
 import java.net.URL;
 import java.nio.file.Paths;
@@ -7,10 +7,10 @@ import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 
 /**
- *
+ * // TODO write about pure functions
  */
-public class FileNameUtil {
-    public static String fileNameFromUrl(URL url) {
+public class FileName {
+    public static String fromUrl(URL url) {
         requireNonNull(url, "URL should not be null.");
         var path = url.getPath();
         var fileName = Paths.
@@ -56,7 +56,7 @@ public class FileNameUtil {
      * empty, the same instance of string is returned.
      * <p>
      */
-    public static String osTolerantFileName(String fileName) {
+    public static String osTolerant(String fileName) {
         requireNonNull(fileName, "Input file name should not be null.");
         return fileName.replaceAll(
                 FORBIDDEN_CHARACTERS_REGEX,

@@ -1,4 +1,8 @@
-package com.github.flaz14;
+package com.github.flaz14.io;
+
+import com.github.flaz14.Image;
+import com.github.flaz14.Limitations;
+import com.github.flaz14.util.FileName;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -20,8 +24,8 @@ import static java.util.Set.of;
 /**
  *
  */
-class Loader {
-    Loader(String urlString) {
+public class Loader {
+    public Loader(String urlString) {
         new Check().
                 nonNull(urlString).
                 nonEmpty(urlString);
@@ -34,7 +38,7 @@ class Loader {
         }
     }
 
-    Image load() {
+    public Image load() {
         try (InputStream urlStream = url.openStream();
              ImageInputStream imageStream = ImageIO.createImageInputStream(urlStream)) {
             ImageReader reader = getFirstImage(imageStream);
@@ -44,7 +48,7 @@ class Loader {
             new Check().
                     width(buffer).
                     height(buffer);
-            String fileName = FileNameUtil.fileNameFromUrl(url);
+            String fileName = FileName.fromUrl(url);
             return new Image(buffer, formatName, fileName);
         } catch (IOException onRead) {
             var message = format("Failed to read image from URL [%s].", url);
@@ -80,21 +84,6 @@ class Loader {
         return formatName;
     }
 
-    // Simple validations that doesn't produce any new data
-    // Gathered into inner class in order to avoid excessive repetive names like checkXXX
-    // Also reduces amount of typing thankfully to call chains, for example, not
-    //
-    // new Check().width(image);
-    // new Check().height(image);
-    //
-    // but:
-    // new Check().
-    //        width(image).
-    //        height(image);
-    //
-    //
-    //
-    //
     private class Check {
         private Check nonNull(String urlString) {
             requireNonNull(urlString, "URL string should not be null.");

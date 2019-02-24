@@ -1,5 +1,6 @@
 package com.github.flaz14;
 
+import com.github.flaz14.processor.Resizer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

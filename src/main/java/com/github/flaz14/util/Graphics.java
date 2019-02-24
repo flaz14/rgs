@@ -1,4 +1,4 @@
-package com.github.flaz14;
+package com.github.flaz14.util;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -1,5 +1,6 @@
 package com.github.flaz14;
 
+import com.github.flaz14.util.FileName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,15 +18,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  *
  */
-class FileNameUtilTest {
+class FileNameTest {
     @Nested
-    class FileNameFromUrl {
+    class FromUrl {
         @Test
         @DisplayName("Throws exception when URL is null.")
         void nullUrl() {
             var exception = assertThrows(
                     NullPointerException.class,
-                    () -> FileNameUtil.fileNameFromUrl(null));
+                    () -> FileName.fromUrl(null));
             assertThat(
                     exception.getMessage(),
                     equalTo("URL should not be null."));
@@ -37,7 +38,7 @@ class FileNameUtilTest {
             var urlWithoutPath = new URL("file:///");
             var exception = assertThrows(
                     IllegalArgumentException.class,
-                    () -> FileNameUtil.fileNameFromUrl(urlWithoutPath));
+                    () -> FileName.fromUrl(urlWithoutPath));
             assertThat(
                     exception.getMessage(),
                     equalTo("Failed to extract file name from URL [file:/] " +
@@ -58,19 +59,19 @@ class FileNameUtilTest {
         void happyPath(String urlString, String expectedFileName) throws Exception {
             var url = new URL(urlString);
             assertThat(
-                    FileNameUtil.fileNameFromUrl(url),
+                    FileName.fromUrl(url),
                     equalTo(expectedFileName));
         }
     }
 
     @Nested
-    class OsTolerantFileName {
+    class OsTolerant {
         @Test
         @DisplayName("Throw exception with input file name is null.")
         void nullFileName() {
             var exception = assertThrows(
                     NullPointerException.class,
-                    () -> FileNameUtil.osTolerantFileName(null));
+                    () -> FileName.osTolerant(null));
             assertThat(
                     exception.getMessage(),
                     equalTo("Input file name should not be null."));
@@ -84,7 +85,7 @@ class FileNameUtilTest {
         })
         void happyPath(String inputFileName, String expectedOutputFileName) {
             assertThat(
-                    FileNameUtil.osTolerantFileName(inputFileName),
+                    FileName.osTolerant(inputFileName),
                     equalTo(expectedOutputFileName));
         }
 
@@ -92,7 +93,7 @@ class FileNameUtilTest {
         @DisplayName("Does not affect empty input file name.")
         void emptyFileName() {
             var inputFileName = "";
-            var outputFileName = FileNameUtil.osTolerantFileName(inputFileName);
+            var outputFileName = FileName.osTolerant(inputFileName);
             assertThat(
                     outputFileName,
                     is(sameInstance(inputFileName)));

@@ -12,15 +12,15 @@ public class Image {
         this.fileName = fileName;
     }
 
-    BufferedImage buffer() {
+    public BufferedImage buffer() {
         return buffer;
     }
 
-    String formatName() {
+    public String formatName() {
         return formatName;
     }
 
-    String fileName() {
+    public String fileName() {
         return fileName;
     }
 

@@ -1,23 +1,29 @@
-package com.github.flaz14;
+package com.github.flaz14.processor;
+
+import com.github.flaz14.Image;
+import com.github.flaz14.util.Graphics;
 
 import java.awt.image.BufferedImage;
 
+import static java.util.Objects.requireNonNull;
+
 /**
- * https://stackoverflow.com/questions/9131678/convert-a-rgb-image-to-grayscale-image-reducing-the-memory-in-java
+ * // TODO implement cache but not right now
  */
-public class Grayscaler {
-    public Grayscaler(Image image) {
+public class Resizer {
+    private final Image image;
+
+    public Resizer(Image image) {
+        requireNonNull(image, "Image buffer should not be null.");
         this.image = image;
     }
 
-    public Image grayscale() {
+    public Image resize(int width, int height) {
         BufferedImage oldBuffer = image.buffer();
-        int width = oldBuffer.getWidth();
-        int height = oldBuffer.getHeight();
         BufferedImage newBuffer = new BufferedImage(
                 width,
                 height,
-                BufferedImage.TYPE_BYTE_GRAY);
+                BufferedImage.TYPE_INT_RGB);
         try (Graphics graphics = new Graphics(newBuffer)) {
             graphics.draw(oldBuffer, width, height);
             return new Image(
@@ -26,6 +32,4 @@ public class Grayscaler {
                     image.fileName());
         }
     }
-
-    private final Image image;
 }
