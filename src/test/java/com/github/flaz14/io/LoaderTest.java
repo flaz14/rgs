@@ -1,4 +1,4 @@
-package com.github.flaz14;
+package com.github.flaz14.io;
 
 import com.github.flaz14.io.Loader;
 import org.junit.jupiter.api.DisplayName;

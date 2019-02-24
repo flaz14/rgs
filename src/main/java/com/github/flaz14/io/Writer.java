@@ -7,14 +7,16 @@ import java.io.File;
 import java.io.IOException;
 
 import static java.lang.String.format;
+import static java.util.Objects.requireNonNull;
 
 /**
- *
+ * // TODO it's complicated to test this class because it writes file into current directory.
  */
 public class Writer {
     private final Image image;
 
     public Writer(Image image) {
+        requireNonNull(image, "Input image should not be null.");
         this.image = image;
     }
 
