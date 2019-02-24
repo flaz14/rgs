@@ -12,6 +12,18 @@ public class Image {
         this.fileName = fileName;
     }
 
+    BufferedImage buffer() {
+        return buffer;
+    }
+
+    String formatName() {
+        return formatName;
+    }
+
+    String fileName() {
+        return fileName;
+    }
+
     private final BufferedImage buffer;
     private final String formatName;
     private final String fileName;

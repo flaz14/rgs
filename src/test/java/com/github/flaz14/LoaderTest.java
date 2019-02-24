@@ -3,15 +3,13 @@ package com.github.flaz14;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-
-import java.net.URL;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.AllOf.allOf;
+import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LoaderTest {
@@ -139,8 +137,16 @@ class LoaderTest {
         @Test
         @DisplayName("Loads image and preserves original format, file name and extension.")
         void happyPath() {
-            new Loader(sampleImage("1024x280.jpg")).
+            var image = new Loader(sampleImage("1024x280.jpg")).
                     load();
+            // There should be single assertion.
+            // But implementation of custom Hamcrest matcher
+            // is superfluous in case of just three properties
+            // (exact comparison of image buffers is useless,
+            // this is why we only check for `null').
+            assertThat(image.buffer(), is(notNullValue()));
+            assertThat(image.formatName(), is("JPEG"));
+            assertThat(image.fileName(), equalTo("1024x280.jpg"));
         }
     }
 

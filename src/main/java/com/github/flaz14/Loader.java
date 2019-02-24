@@ -1,11 +1,13 @@
 package com.github.flaz14;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Paths;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
@@ -33,17 +35,18 @@ class Loader {
 
     Image load() {
         try {
-            BufferedImage image = ImageIO.read(url);
-            if (image == null) {
-                var message = format("There is no image at URL [%s]; " +
-                                "perhaps, the URL points to the file of other type or to directory.",
-                        url);
-                throw new IllegalStateException(message);
-            }
+            ImageInputStream imageStream = ImageIO.createImageInputStream(url.openStream());
+            Iterator<ImageReader> readers = new ImageRequirement().atLeastOneImage(imageStream);
+            ImageReader reader = readers.next();
+            String formatName = reader.getFormatName();
+            new ImageRequirement().format(formatName);
+            reader.setInput(imageStream);
+            BufferedImage buffer = reader.read(0);
             new ImageRequirement().
-                    width(image).
-                    height(image);
-            return null;
+                    width(buffer).
+                    height(buffer);
+            String fileName = FileNameUtil.fileNameFromUrl(url);
+            return new Image(buffer, formatName, fileName);
         } catch (IOException onRead) {
             var message = format("Failed to read image from URL [%s].", url);
             throw new IllegalStateException(message, onRead);
@@ -89,6 +92,17 @@ class Loader {
     }
 
     private class ImageRequirement {
+        Iterator<ImageReader> atLeastOneImage(ImageInputStream imageStream) {
+            Iterator<ImageReader> readers = ImageIO.getImageReaders(imageStream);
+            if (!readers.hasNext()) {
+                var message = String.format("There is no image at URL [%s]; " +
+                                "perhaps, the URL points to the file of other type or to directory.",
+                        url);
+                throw new IllegalStateException(message);
+            }
+            return readers;
+        }
+
         ImageRequirement width(BufferedImage image) {
             var width = image.getWidth();
             if (width > Limitations.IMAGE_WIDTH_IN_PIXELS) {
@@ -116,6 +130,28 @@ class Loader {
             }
             return this;
         }
+
+        public ImageRequirement format(String formatName) {
+            if (!SUPPORTED_FORMATS.contains(formatName)) {
+                var message = String.format("Format [%s] " +
+                                "of the image downloaded from URL [%s] " +
+                                "is not supported; " +
+                                "supported formats are %s.",
+                        formatName,
+                        url,
+                        SUPPORTED_FORMATS);
+                throw new IllegalArgumentException(message);
+            }
+            return this;
+
+        }
+
+        // TODO we use set because many other protocols can be supported in future,
+        // TODO also, it simplifies composition of readable and informative exception messages
+        // TODO we wrap it with tree set in order to keep the order of comparison consistent.
+        private final Set<String> SUPPORTED_FORMATS =
+                unmodifiableSet(
+                        new TreeSet<>(of("JPEG", "PNG")));
     }
 
     private final URL url;
