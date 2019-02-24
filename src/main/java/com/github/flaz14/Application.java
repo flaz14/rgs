@@ -108,19 +108,19 @@ public class Application implements Runnable {
     @Parameters(
             paramLabel = "HEIGHT",
             index = "2",
-//            arity = "1",
+            arity = "1",
             description = "Similar to WIDTH parameter. Please note, that HEIGHT is not tied to WIDTH. You can specify them " +
                     "independently. This makes harder to keep aspect ratio. Probably, this will be fixed in future release of the tool. " +
                     "" +
                     "\n" +
-                    "This parameter is mandatory."
-    )
+                    "This parameter is mandatory.")
     private int height;
 
     public void run() {
         Image originalImage = new Loader(url).load();
         Image resizedImage = new Resizer(originalImage).resize(width, height);
-        new Writer(resizedImage).write();
+        Image grayscaledImage = new Grayscaler(resizedImage).grayscale();
+        new Writer(grayscaledImage).write();
     }
 
     public static void main(String args[]) {
