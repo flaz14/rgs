@@ -1,20 +1,12 @@
-package com.github.flaz14.util;
+package com.github.flaz14.limit.wrapper;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Set;
-import java.util.TreeSet;
 
+import static com.github.flaz14.limit.Limits.SUPPORTED_PROTOCOLS;
 import static java.lang.String.format;
-import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.requireNonNull;
-import static java.util.Set.of;
 
-/**
- * A wrapper for {@link URL} with some validations (without checked exceptions thrown).
- * <p>
- * Helps to check an URL in the very beginning of application execution.
- */
 public class PermissibleUrl {
     public PermissibleUrl(String urlString) {
         checkNull(urlString);
@@ -59,15 +51,4 @@ public class PermissibleUrl {
     }
 
     private final URL url;
-
-    // According to interview task specification, we support a few of URL
-    // protocols. We can add more protocols into this map in the future
-    // without modification the rest of this class.
-    //
-    // We keep content in `TreeMap' for the sake of predictable order of
-    // validation. And we wrap the map by its unmodifiable twin just
-    // for preventing of accidental modification.
-    private static final Set<String> SUPPORTED_PROTOCOLS =
-            unmodifiableSet(
-                    new TreeSet<>(of("FILE", "HTTP")));
 }

@@ -2,13 +2,12 @@ package com.github.flaz14;
 
 import com.github.flaz14.io.Loader;
 import com.github.flaz14.io.Writer;
+import com.github.flaz14.limit.wrapper.PermissibleDimensions;
+import com.github.flaz14.limit.wrapper.PermissibleUrl;
 import com.github.flaz14.processor.Grayscaler;
 import com.github.flaz14.processor.Resizer;
 import com.github.flaz14.util.Image;
-import com.github.flaz14.util.PermissibleUrl;
 import picocli.CommandLine;
-
-import java.net.URL;
 
 import static picocli.CommandLine.Command;
 import static picocli.CommandLine.Parameters;
@@ -108,9 +107,10 @@ public class Application implements Runnable {
     private int height;
 
     public void run() {
-        URL permissibleUrl = new PermissibleUrl(url).get();
+        PermissibleUrl permissibleUrl = new PermissibleUrl(url);
+        PermissibleDimensions permissibleDimensions = new PermissibleDimensions(width, height);
         Image originalImage = new Loader(permissibleUrl).load();
-        Image resizedImage = new Resizer(originalImage, width, height).process();
+        Image resizedImage = new Resizer(originalImage, permissibleDimensions).process();
         Image grayscaledImage = new Grayscaler(resizedImage).process();
         new Writer(grayscaledImage).write();
     }

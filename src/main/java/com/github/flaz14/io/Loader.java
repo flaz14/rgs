@@ -1,6 +1,7 @@
 package com.github.flaz14.io;
 
-import com.github.flaz14.Limits;
+import com.github.flaz14.limit.Limits;
+import com.github.flaz14.limit.wrapper.PermissibleUrl;
 import com.github.flaz14.util.FileName;
 import com.github.flaz14.util.Image;
 
@@ -12,12 +13,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
 
+import static com.github.flaz14.limit.Limits.SUPPORTED_FORMATS;
 import static java.lang.String.format;
-import static java.util.Collections.unmodifiableSet;
-import static java.util.Set.of;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Loads image from network or disk into memory.
@@ -27,8 +26,9 @@ import static java.util.Set.of;
  * @see Image
  */
 public class Loader {
-    public Loader(URL url) {
-        this.url = url;
+    public Loader(PermissibleUrl url) {
+        requireNonNull(url, "URL wrapper should not be null");
+        this.url = url.get();
     }
 
     /**
@@ -91,7 +91,6 @@ public class Loader {
     // We use non-static inner class in order to reduce amount of dull
     // typing and make chains of validations possible.
     private class Check {
-
         private Check width(BufferedImage image) {
             var width = image.getWidth();
             if (width > Limits.IMAGE_WIDTH_IN_PIXELS) {
@@ -120,20 +119,6 @@ public class Loader {
             return this;
         }
     }
-
-    // Currently we support a few image formats.
-    //
-    // In general, handling each format should be done with great care.
-    // For example, BMP can support transparency or not depending on
-    // compression method (32-bit BITFIELDS vs. 24-bit RGB respectively).
-    // GIF is even more intricate (due to animation).
-    //
-    // We keep content in `TreeMap' for the sake of predictable order of
-    // validation. And we wrap the map by its unmodifiable twin just
-    // for preventing of accidental modification.
-    private static final Set<String> SUPPORTED_FORMATS =
-            unmodifiableSet(
-                    new TreeSet<>(of("JPEG", "PNG")));
 
     private final URL url;
 }

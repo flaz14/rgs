@@ -1,5 +1,6 @@
 package com.github.flaz14.util;
 
+import com.github.flaz14.limit.wrapper.PermissibleUrl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

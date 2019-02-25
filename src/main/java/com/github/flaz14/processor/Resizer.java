@@ -1,8 +1,11 @@
 package com.github.flaz14.processor;
 
+import com.github.flaz14.limit.wrapper.PermissibleDimensions;
 import com.github.flaz14.util.Image;
 
 import java.awt.image.BufferedImage;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Resizes an image according to specified dimensions.
@@ -11,20 +14,20 @@ import java.awt.image.BufferedImage;
  * explicitly.
  */
 public class Resizer extends AbstractProcessor {
-    public Resizer(Image sourceImage, int targetWidth, int targetHeight) {
+    public Resizer(Image sourceImage, PermissibleDimensions dimensions) {
         super(sourceImage);
-        this.targetWidth = targetWidth;
-        this.targetHeight = targetHeight;
+        this.dimensions = requireNonNull(
+                dimensions,
+                "Dimensions wrapper should not be null.");
     }
 
     @Override
     protected BufferedImage getTargetBuffer() {
         return new BufferedImage(
-                targetWidth,
-                targetHeight,
+                dimensions.width(),
+                dimensions.height(),
                 BufferedImage.TYPE_INT_RGB);
     }
 
-    private final int targetWidth;
-    private final int targetHeight;
+    private final PermissibleDimensions dimensions;
 }

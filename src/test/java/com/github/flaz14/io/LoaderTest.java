@@ -1,11 +1,10 @@
 package com.github.flaz14.io;
 
+import com.github.flaz14.limit.wrapper.PermissibleUrl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -22,7 +21,7 @@ class LoaderTest {
         var expectedException = assertThrows(
                 IllegalStateException.class,
                 () -> new Loader(
-                        new URL("file:///")).
+                        new PermissibleUrl("file:///")).
                         load());
         assertThat(
                 expectedException.getMessage(),
@@ -36,7 +35,7 @@ class LoaderTest {
         var expectedException = assertThrows(
                 IllegalStateException.class,
                 () -> new Loader(
-                        new URL("http://this_host_does_not_exist/this_image_does_not_exist")).
+                        new PermissibleUrl("http://this_host_does_not_exist/this_image_does_not_exist")).
                         load());
         assertThat(
                 expectedException.getMessage(),
@@ -103,11 +102,11 @@ class LoaderTest {
         assertThat(image.fileName(), equalTo("1024x280.jpg"));
     }
 
-    private static URL sampleImage(String fileName) throws URISyntaxException, MalformedURLException {
-        return ClassLoader.
+    private static PermissibleUrl sampleImage(String fileName) throws URISyntaxException {
+        String url = ClassLoader.
                 getSystemResource(fileName).
-                toURI().
-                toURL();
+                toString();
+        return new PermissibleUrl(url);
     }
 }
 

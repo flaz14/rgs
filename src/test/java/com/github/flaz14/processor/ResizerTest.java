@@ -1,5 +1,6 @@
 package com.github.flaz14.processor;
 
+import com.github.flaz14.limit.wrapper.PermissibleDimensions;
 import com.github.flaz14.util.Image;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,9 @@ class ResizerTest {
                 new BufferedImage(2, 5, BufferedImage.TYPE_INT_RGB),
                 "JPEG",
                 "file.jpg");
-        Image resized = new Resizer(original, targetWidth, targetHeight).
+        Image resized = new Resizer(
+                original,
+                new PermissibleDimensions(targetWidth, targetHeight)).
                 process();
 
         // We compare only actual width and height, there is useless effort to compare buffers.

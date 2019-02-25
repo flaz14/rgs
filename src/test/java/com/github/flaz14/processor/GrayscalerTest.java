@@ -16,22 +16,23 @@ class GrayscalerTest {
     @Test
     @DisplayName("Grayscales image but keeps width, height, image format and file name unchanged.")
     void happyPath() {
-        int targetWidth = 8;
-        int targetHeight = 3;
+        final int width = 2;
+        final int height = 5;
+        
         Image original = new Image(
-                new BufferedImage(2, 5, BufferedImage.TYPE_INT_RGB),
+                new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB),
                 "JPEG",
                 "file.jpg");
-        Image resized = new Resizer(original, targetWidth, targetHeight).
+        Image resized = new Grayscaler(original).
                 process();
 
         // We compare only actual width and height, there is useless effort to compare buffers.
         assertThat(
                 resized.buffer().getWidth(),
-                equalTo(targetWidth));
+                equalTo(width));
         assertThat(
                 resized.buffer().getHeight(),
-                equalTo(targetHeight));
+                equalTo(height));
 
         // But other properties are unchanged
         assertThat(
