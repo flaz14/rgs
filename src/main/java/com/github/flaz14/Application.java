@@ -11,7 +11,6 @@ import picocli.CommandLine;
 import java.net.URL;
 
 import static picocli.CommandLine.Command;
-import static picocli.CommandLine.Option;
 import static picocli.CommandLine.Parameters;
 
 /**
@@ -67,19 +66,6 @@ import static picocli.CommandLine.Parameters;
         mixinStandardHelpOptions = true,
         version = "1.0")
 public class Application implements Runnable {
-    @Option(
-            names = {"-v", "--verbose"},
-            description = "Verbose mode. This option is helpful if you would like an interactive session or " +
-                    "troubleshoot the application. If you plan to use the application in non-interactive mode (for " +
-                    "example, inside a shell-script) you probably don't need to use this option. " +
-                    "Multiple `-v' options increase the verbosity. " +
-                    "\n" +
-                    "By default only path to output image is printed." +
-                    "" +
-                    "\n" +
-                    "This switch is optional.")
-    private boolean[] verbose = new boolean[0];
-
     @Parameters(
             paramLabel = "URL",
             index = "0",
