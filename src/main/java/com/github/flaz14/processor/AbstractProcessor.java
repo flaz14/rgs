@@ -1,6 +1,6 @@
 package com.github.flaz14.processor;
 
-import com.github.flaz14.Image;
+import com.github.flaz14.util.Image;
 import com.github.flaz14.util.Graphics;
 
 import java.awt.image.BufferedImage;

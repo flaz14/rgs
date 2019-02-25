@@ -1,8 +1,8 @@
 package com.github.flaz14.io;
 
-import com.github.flaz14.Image;
 import com.github.flaz14.Limits;
 import com.github.flaz14.util.FileName;
+import com.github.flaz14.util.Image;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -10,7 +10,6 @@ import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Set;
@@ -18,7 +17,6 @@ import java.util.TreeSet;
 
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableSet;
-import static java.util.Objects.requireNonNull;
 import static java.util.Set.of;
 
 /**
@@ -29,17 +27,8 @@ import static java.util.Set.of;
  * @see Image
  */
 public class Loader {
-    public Loader(String urlString) {
-        new Check().
-                nonNull(urlString).
-                nonEmpty(urlString);
-        try {
-            url = new URL(urlString);
-            new Check().protocol();
-        } catch (MalformedURLException onParsing) {
-            var message = format("URL string [%s] is malformed.", urlString);
-            throw new IllegalArgumentException(message, onParsing);
-        }
+    public Loader(URL url) {
+        this.url = url;
     }
 
     /**
@@ -102,34 +91,6 @@ public class Loader {
     // We use non-static inner class in order to reduce amount of dull
     // typing and make chains of validations possible.
     private class Check {
-        private Check nonNull(String urlString) {
-            requireNonNull(urlString, "URL string should not be null.");
-            return this;
-        }
-
-        private Check nonEmpty(String urlString) {
-            if (urlString.isEmpty()) {
-                throw new IllegalArgumentException("URL string should not be empty.");
-            }
-            return this;
-        }
-
-        private Check protocol() {
-            var protocol = url.
-                    getProtocol().
-                    toUpperCase();
-            if (!SUPPORTED_PROTOCOLS.contains(protocol)) {
-                var message = format("Protocol [%s] " +
-                                "specified in URL string [%s] " +
-                                "is not supported; " +
-                                "supported protocols are %s.",
-                        protocol,
-                        url,
-                        SUPPORTED_PROTOCOLS);
-                throw new IllegalArgumentException(message);
-            }
-            return this;
-        }
 
         private Check width(BufferedImage image) {
             var width = image.getWidth();
@@ -160,17 +121,6 @@ public class Loader {
         }
     }
 
-    // According to interview task specification, we support a few of URL
-    // protocols. We can add more protocols into this map in the future
-    // without modification the rest of this class.
-    //
-    // We keep content in `TreeMap' for the sake of predictable order of
-    // validation. And we wrap the map by its unmodifiable twin just
-    // for preventing of accidental modification.
-    private static final Set<String> SUPPORTED_PROTOCOLS =
-            unmodifiableSet(
-                    new TreeSet<>(of("FILE", "HTTP")));
-
     // Currently we support a few image formats.
     //
     // In general, handling each format should be done with great care.
@@ -178,8 +128,9 @@ public class Loader {
     // compression method (32-bit BITFIELDS vs. 24-bit RGB respectively).
     // GIF is even more intricate (due to animation).
     //
-    // The explanations about extensibility and robustness from the above
-    // map are relevant for this map as well.
+    // We keep content in `TreeMap' for the sake of predictable order of
+    // validation. And we wrap the map by its unmodifiable twin just
+    // for preventing of accidental modification.
     private static final Set<String> SUPPORTED_FORMATS =
             unmodifiableSet(
                     new TreeSet<>(of("JPEG", "PNG")));

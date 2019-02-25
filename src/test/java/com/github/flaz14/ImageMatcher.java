@@ -1,5 +1,6 @@
 package com.github.flaz14;
 
+import com.github.flaz14.util.Image;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 

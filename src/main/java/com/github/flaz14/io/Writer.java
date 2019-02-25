@@ -1,6 +1,6 @@
 package com.github.flaz14.io;
 
-import com.github.flaz14.Image;
+import com.github.flaz14.util.Image;
 import com.github.flaz14.util.FileName;
 
 import javax.imageio.ImageIO;
