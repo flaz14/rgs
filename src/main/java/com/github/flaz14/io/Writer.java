@@ -40,7 +40,7 @@ public class Writer {
                     image.formatName(),
                     targetFile);
 
-            // Seems it will be better to print the resultant file
+            // Seems it will be prettier to print the resultant file
             // in OS-specific manner (for example, capital drive
             // letters on Windows, etc).
             System.out.println(targetFile.getCanonicalPath());
