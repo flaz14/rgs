@@ -3,7 +3,7 @@ package com.github.flaz14.util;
 import java.awt.image.BufferedImage;
 
 /**
- * Handy wrapper that helps to keep original image format, file name and the buffer itself together.
+ * Handy wrapper that helps to keep original image format, file name and actual image content together.
  */
 public class Image {
     public Image(BufferedImage buffer, String formatName, String fileName) {

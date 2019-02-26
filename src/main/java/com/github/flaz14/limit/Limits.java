@@ -7,8 +7,12 @@ import static java.util.Collections.unmodifiableSet;
 import static java.util.Set.of;
 
 /**
- * All the limits gathered into single place in order to avoid duplication (and accidental copy'n'paste errors in CLI
- * description).
+ * All the limits are gathered into single place in order to avoid duplication (and accidental copy'n'paste errors in
+ * documentation of Command-Line Interface).
+ * <p>
+ * We need limitations not only by the specification of interview task, but just for predictable behavior of the
+ * application. It will be better to stop processing right in the beginning rather that let the program silently fail
+ * somewhere in the middle due to out of memory.
  */
 public class Limits {
     public static final int IMAGE_WIDTH_IN_PIXELS = 4096;

@@ -12,7 +12,7 @@ import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Save an image from memory to local disk.
+ * Saves an image from memory to local disk.
  * <p>
  * This class is tied to runtime environment. So testing of the class is complicated because it requires a kind of
  * sandbox. So we haven't implemented Unit tests at all at this moment.
@@ -28,7 +28,7 @@ public class Writer {
     /**
      * Writes image from memory into current directory.
      * <p>
-     * The format and extension of original image is prevented.
+     * The format and extension of original image will be prevented.
      */
     public void write() {
         String osTolerantFileName = FileName.osTolerant(

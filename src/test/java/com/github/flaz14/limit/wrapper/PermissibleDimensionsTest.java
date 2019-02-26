@@ -7,9 +7,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- *
- */
 class PermissibleDimensionsTest {
     @Test
     @DisplayName("Throws exception when width is too small.")

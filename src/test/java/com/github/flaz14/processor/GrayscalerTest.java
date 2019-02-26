@@ -9,9 +9,6 @@ import java.awt.image.BufferedImage;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-/**
- *
- */
 class GrayscalerTest {
     @Test
     @DisplayName("Grayscales image but keeps width, height, image format and file name unchanged.")
@@ -34,7 +31,7 @@ class GrayscalerTest {
                 resized.buffer().getHeight(),
                 equalTo(height));
 
-        // But other properties are unchanged
+        // Verify that other properties were let unchanged.
         assertThat(
                 resized.formatName(),
                 equalTo(original.formatName()));

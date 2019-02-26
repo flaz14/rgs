@@ -10,7 +10,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Resizes an image according to specified dimensions.
  * <p>
- * Please note that in order to keep aspect ratio you need to calculate dimensions in advance and specify them
+ * Please note that in order to keep aspect ratio the user need to calculate dimensions in advance and specify them
  * explicitly.
  */
 public class Resizer extends AbstractProcessor {

@@ -35,7 +35,7 @@ public class Loader {
      * Reads image from an URL and preserves information about image format and file name. So the image can be processed
      * and saved in the same form as the original.
      * <p>
-     * File name is considered as "base name". E.g. a name without path but with extension.
+     * File name is considered as "base name". E.g. a name without a path but with extension.
      *
      * @return a "fresh" instance of an image. Caching for multiple loading of the same picture is not implemented
      * currently.
@@ -85,15 +85,16 @@ public class Loader {
         return formatName;
     }
 
-    // We can verify image dimensions only after we've loaded it.
+    // We can verify dimensions of an image only after we've
+    // loaded it.
     //
     // Actually, we could use corresponding utility class for
-    // validation of the dimensions. But we validate width and
-    // height of loaded image with aid of specific methods in
-    // order to provide informative exception messages. So
-    // a user (or third-party developer) can know what exact
-    // image (we included URL into exception message) has
-    // incorrect size.
+    // validation of the dimensions (e.g. `PermissibleDimensions').
+    // But we validate width and height of loaded image with aid
+    // of specific methods in order to provide informative
+    // exception messages. So a user (or third-party developer)
+    // can know what exact image (we included URL into exception
+    // message) has incorrect size.
     private void checkWidth(BufferedImage image) {
         var width = image.getWidth();
         if (width > Limits.IMAGE_WIDTH_IN_PIXELS) {

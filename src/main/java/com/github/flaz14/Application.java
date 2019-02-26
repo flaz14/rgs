@@ -13,23 +13,6 @@ import static picocli.CommandLine.Command;
 import static picocli.CommandLine.Parameters;
 
 /**
- * Написать консольное приложение на Java, которое принимает на вход три параметра:
- * <p>
- * URL изображения (формата http://host/path или file:/path)
- * <p>
- * width
- * <p>
- * heights
- * <p>
- * Результатом выполнения должно быть черно белое изображение (grayscale) приведенное к размерам width x heights
- * <p>
- * Изображение можно сохранить в рабочую директорию, выводить путь к изображению.
- * <p>
- * Приветствуется:
- * <p>
- * тесты
- * <p>
- * описание какие форматы изображений поддерживаются.
  *
  *
  * <a href="https://github.com/remkop/picocli/issues/292">Validation of parameters</a>

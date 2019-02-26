@@ -1,7 +1,7 @@
 package com.github.flaz14.processor;
 
-import com.github.flaz14.util.Image;
 import com.github.flaz14.util.Graphics;
+import com.github.flaz14.util.Image;
 
 import java.awt.image.BufferedImage;
 
@@ -11,7 +11,7 @@ import static java.util.Objects.requireNonNull;
  * Common functionality for image processing.
  * <p>
  * Since we use {@link BufferedImage}, most of operations are very similar. So we concentrated such routines in this
- * class but allowed customization of target image via extension.
+ * class. But allowed customization of target image via extension.
  */
 public abstract class AbstractProcessor {
     AbstractProcessor(Image sourceImage) {

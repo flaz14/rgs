@@ -33,7 +33,7 @@ class ResizerTest {
                 resized.buffer().getHeight(),
                 equalTo(targetHeight));
 
-        // But other properties are unchanged
+        // Other properties should be the same.
         assertThat(
                 resized.formatName(),
                 equalTo(original.formatName()));
