@@ -13,6 +13,10 @@
 
     <java.version>10</java.version>
 
+    <!-- Those properties are not needed by Maven (since we use
+         modern versions of the compiler plugin). But we keep these
+         properties for IDE (for instance, if you remove the properties
+         IntelliJ IDEA will fall-back to Java 1.5). -->
     <maven.compiler.source>1.${java.version}</maven.compiler.source>
     <maven.compiler.target>1.${java.version}</maven.compiler.target>
 
@@ -42,7 +46,6 @@
     </dependency>
 
   </dependencies>
-
 
   <build>
     <plugins>

@@ -4,8 +4,6 @@ import com.github.flaz14.limit.wrapper.PermissibleUrl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.net.URISyntaxException;
-
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -90,7 +88,7 @@ class LoaderTest {
 
     @Test
     @DisplayName("Loads image and preserves original format, file name and extension.")
-    void happyPath() throws Exception {
+    void happyPath() {
         var image = new Loader(sampleImage("1024x280.jpg")).
                 load();
         // There should be single assertion.
