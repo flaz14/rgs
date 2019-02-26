@@ -47,9 +47,8 @@ public class Loader {
             reader.setInput(imageStream);
             String formatName = getFormatName(reader);
             BufferedImage buffer = reader.read(0);
-            new Check().
-                    width(buffer).
-                    height(buffer);
+            checkWidth(buffer);
+            checkHeight(buffer);
             String fileName = FileName.fromUrl(url);
             return new Image(buffer, formatName, fileName);
         } catch (IOException onRead) {
@@ -86,37 +85,38 @@ public class Loader {
         return formatName;
     }
 
-    // Contains simple validations that haven't side effects.
+    // We can verify image dimensions only after we've loaded it.
     //
-    // We use non-static inner class in order to reduce amount of dull
-    // typing and make chains of validations possible.
-    private class Check {
-        private Check width(BufferedImage image) {
-            var width = image.getWidth();
-            if (width > Limits.IMAGE_WIDTH_IN_PIXELS) {
-                var message = format("The image at URL [%s] " +
-                                "is [%d] pixels wide; " +
-                                "maximum allowed width of an image is equal to [%d] pixels.",
-                        url,
-                        width,
-                        Limits.IMAGE_WIDTH_IN_PIXELS);
-                throw new IllegalStateException(message);
-            }
-            return this;
+    // Actually, we could use corresponding utility class for
+    // validation of the dimensions. But we validate width and
+    // height of loaded image with aid of specific methods in
+    // order to provide informative exception messages. So
+    // a user (or third-party developer) can know what exact
+    // image (we included URL into exception message) has
+    // incorrect size.
+    private void checkWidth(BufferedImage image) {
+        var width = image.getWidth();
+        if (width > Limits.IMAGE_WIDTH_IN_PIXELS) {
+            var message = format("The image at URL [%s] " +
+                            "is [%d] pixels wide; " +
+                            "maximum allowed width of an image is equal to [%d] pixels.",
+                    url,
+                    width,
+                    Limits.IMAGE_WIDTH_IN_PIXELS);
+            throw new IllegalStateException(message);
         }
+    }
 
-        private Check height(BufferedImage image) {
-            var height = image.getHeight();
-            if (height > Limits.IMAGE_HEIGHT_IN_PIXELS) {
-                var message = format("The image at URL [%s] " +
-                                "is [%d] pixels high; " +
-                                "maximum allowed height of an image is equal to [%d] pixels.",
-                        url,
-                        height,
-                        Limits.IMAGE_WIDTH_IN_PIXELS);
-                throw new IllegalStateException(message);
-            }
-            return this;
+    private void checkHeight(BufferedImage image) {
+        var height = image.getHeight();
+        if (height > Limits.IMAGE_HEIGHT_IN_PIXELS) {
+            var message = format("The image at URL [%s] " +
+                            "is [%d] pixels high; " +
+                            "maximum allowed height of an image is equal to [%d] pixels.",
+                    url,
+                    height,
+                    Limits.IMAGE_WIDTH_IN_PIXELS);
+            throw new IllegalStateException(message);
         }
     }
 

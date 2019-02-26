@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class LoaderTest {
     @Test
     @DisplayName("Throws exception when there is no image file at given URL.")
-    void notImage() throws Exception {
+    void notImage() {
         var expectedException = assertThrows(
                 IllegalStateException.class,
                 () -> new Loader(
@@ -78,12 +78,13 @@ class LoaderTest {
     void malformedImage() {
         var expectedException = assertThrows(
                 IllegalStateException.class,
-                () -> new Loader(sampleImage("malformed.tif")).
+                () -> new Loader(sampleImage("malformed.jpg")).
                         load());
         assertThat(
                 expectedException.getMessage(),
                 allOf(
                         containsString("There is no image at URL"),
+                        containsString("malformed.jpg"),
                         containsString("perhaps, the URL points to the file of other type or to directory")));
     }
 
@@ -102,7 +103,7 @@ class LoaderTest {
         assertThat(image.fileName(), equalTo("1024x280.jpg"));
     }
 
-    private static PermissibleUrl sampleImage(String fileName) throws URISyntaxException {
+    private static PermissibleUrl sampleImage(String fileName) {
         String url = ClassLoader.
                 getSystemResource(fileName).
                 toString();
