@@ -18,7 +18,7 @@ class GrayscalerTest {
     void happyPath() {
         final int width = 2;
         final int height = 5;
-        
+
         Image original = new Image(
                 new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB),
                 "JPEG",
