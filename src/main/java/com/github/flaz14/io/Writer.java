@@ -6,6 +6,7 @@ import com.github.flaz14.util.Image;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
@@ -38,8 +39,18 @@ public class Writer {
                     image.formatName(),
                     new File(osTolerantFileName));
         } catch (IOException onWrite) {
-            var message = format("Failed to write image [%s] into current directory.", image);
+            var message = format("Failed to write image [%s] " +
+                            "into current working directory [%s].",
+                    image,
+                    currentWorkingDirectory());
             throw new IllegalStateException(message, onWrite);
         }
+    }
+
+    private static String currentWorkingDirectory() {
+        return Paths.get(".").
+                toAbsolutePath().
+                normalize().
+                toString();
     }
 }
