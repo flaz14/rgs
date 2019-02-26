@@ -34,10 +34,12 @@ public class Writer {
         String osTolerantFileName = FileName.osTolerant(
                 image.fileName());
         try {
+            File targetFile = new File(osTolerantFileName);
             ImageIO.write(
                     image.buffer(),
                     image.formatName(),
-                    new File(osTolerantFileName));
+                    targetFile);
+            System.out.println(targetFile.getAbsolutePath());
         } catch (IOException onWrite) {
             var message = format("Failed to write image [%s] " +
                             "into current working directory [%s].",
