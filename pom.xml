@@ -8,6 +8,8 @@
   <artifactId>rgs</artifactId>
   <version>1.0</version>
 
+  <name>rgs - Resize, Grayscale, Save</name>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -70,6 +72,7 @@
               <mainClass>${main.class}</mainClass>
             </manifest>
           </archive>
+          <finalName>${project.artifactId}</finalName>
         </configuration>
       </plugin>
 

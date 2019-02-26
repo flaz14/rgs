@@ -2,6 +2,7 @@ package com.github.flaz14;
 
 import com.github.flaz14.io.Loader;
 import com.github.flaz14.io.Writer;
+import com.github.flaz14.limit.Limits;
 import com.github.flaz14.limit.wrapper.PermissibleDimensions;
 import com.github.flaz14.limit.wrapper.PermissibleUrl;
 import com.github.flaz14.processor.Grayscaler;
@@ -13,37 +14,34 @@ import static picocli.CommandLine.Command;
 import static picocli.CommandLine.Parameters;
 
 /**
- *
- *
  * <a href="https://github.com/remkop/picocli/issues/292">Validation of parameters</a>
  */
 @Command(
         name = "rgs",
         description = "Rgs - the stupid image processing tool." +
-                "\n" +
+                "\n\n" +
                 "The tool resizes given image according to desired dimensions and converts it to grayscale. The tool" +
-                "doesn't keep aspect ratio. So if you would like to SCALE an image please calculate appropriate dimensions" +
-                "in advance and pass them to the tool explicitly. Maximum image size is 4096x4096 pixels. Тут еще будет написано, " +
-                "что обработка гигантских изображений - отдельная задача, требующая времени, что фича будет реализована в будущих" +
-                "версиях программы, а сейчас лучше пусть приложение откажется работать сразу, нежели внезапно упадет посередине" +
-                "из-за нехватки памяти." +
-                "\n" +
-                "Resultant image will be saved into current directory with hard-coded name `a.out' (like GSS compiler does for " +
-                "output executable). " +
-                "Absolute path to output file will be printed (please see `--verbose' switch for more details)." +
-                " It's quite ugly behaviour" +
-                "Если файл с именем a.out уже существует в текущей директории, он перезаписывается безо всяких предупреждений." +
-                "Because typical user would like to keep the same extension as for input image (however, in Unix-like operating" +
-                "systems file extension doesn't matter). Perhaps, this will be improved in future release of the application " +
-                "(with a bunch of optional switches for fine-grained tuning of output file name)." +
-                "\n" +
-                "For example, you would like to grab Google logo from the Web, downscale it in ten times and save to our computer." +
-                "Just invoke the tool like this: " +
-                "\n" +
-                "rgs http://www.google.by/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png 100 100\n" +
-                "\n" +
-                "\n" +
-                "Currently only JPEG and PNG formats are supported." +
+                "doesn't keep aspect ratio automatically. So if you would like to SCALE an image please calculate " +
+                "appropriate dimensions in advance and pass them to the tool explicitly." +
+                "\n\n" +
+                "Resultant image will be saved into current working directory under the name as of original image " +
+                "(including file extension). Absolute path to output image will printed on the screen. If a same-titled " +
+                "file already exists in the directory it will be overwritten without any notice. Output file will have " +
+                "the same format as input one." +
+                "\n\n" +
+                "Maximum size of input image is " + Limits.IMAGE_WIDTH_IN_PIXELS + "x" + Limits.IMAGE_HEIGHT_IN_PIXELS +
+                " pixels. Probably, larger images will be supported in future versions of the application." +
+                "\n\n" +
+                "Currently only JPEG format is supported. Probably, more formats will be handled in future versions of " +
+                "the tool." +
+                "\n\n" +
+                "For example, you would like to grab JPEG from the Web, downscale it and save to your computer, " +
+                "just invoke the tool like this: " +
+                "\n\n" +
+                "java -jar rgs.jar flaz14.github.io/blob/master/draft/mtbank.jpg 100 100" +
+                "java -jar rgs.jar flaz14.github.io/blob/master/draft/mtbank.jpg 100 100" +
+                "https://github.com/flaz14/flaz14.github.io/raw/master/draft/mtbank.jpg"
+                "\n\n" +
                 "",
         mixinStandardHelpOptions = true,
         version = "1.0")
