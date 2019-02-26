@@ -13,12 +13,10 @@ import picocli.CommandLine;
 import static picocli.CommandLine.Command;
 import static picocli.CommandLine.Parameters;
 
-/**
- * <a href="https://github.com/remkop/picocli/issues/292">Validation of parameters</a>
- */
+
 @Command(
         name = "rgs",
-        description = "Rgs - the stupid image processing tool." +
+        description = "Rgs - stupid image processing tool." +
                 "\n\n" +
                 "The tool resizes given image according to desired dimensions and converts it to grayscale. The tool" +
                 "doesn't keep aspect ratio automatically. So if you would like to SCALE an image please calculate " +
