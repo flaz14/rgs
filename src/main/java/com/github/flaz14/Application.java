@@ -38,9 +38,7 @@ import static picocli.CommandLine.Parameters;
                 "For example, you would like to grab JPEG from the Web, downscale it and save to your computer, " +
                 "just invoke the tool like this: " +
                 "\n\n" +
-                "java -jar rgs.jar flaz14.github.io/blob/master/draft/mtbank.jpg 100 100" +
-                "java -jar rgs.jar flaz14.github.io/blob/master/draft/mtbank.jpg 100 100" +
-                "https://github.com/flaz14/flaz14.github.io/raw/master/draft/mtbank.jpg"
+                "java -jar rgs.jar http://flaz14.github.io/draft/mtbank.jpg 100 100" +
                 "\n\n" +
                 "",
         mixinStandardHelpOptions = true,
