@@ -39,7 +39,11 @@ public class Writer {
                     image.buffer(),
                     image.formatName(),
                     targetFile);
-            System.out.println(targetFile.getAbsolutePath());
+
+            // Seems it will be better to print the resultant file
+            // in OS-specific manner (for example, capital drive
+            // letters on Windows, etc).
+            System.out.println(targetFile.getCanonicalPath());
         } catch (IOException onWrite) {
             var message = format("Failed to write image [%s] " +
                             "into current working directory [%s].",
